@@ -1,2 +1,3 @@
- Jeppe Moritz Led   ,jle@easv.dk
-      Peter G. Stegger Nielsen,      pgn@easv.dk
+Jeppe Moritz Led,jle@easv.dk
+Peter G. Stegger Nielsen,pgn@easv.dk
+Bent H Pedersen,bhp@easv.dk

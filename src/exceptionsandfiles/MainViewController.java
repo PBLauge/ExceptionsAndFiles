@@ -6,11 +6,15 @@
 package exceptionsandfiles;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,6 +52,31 @@ public class MainViewController implements Initializable
                 new PropertyValueFactory("email"));
     }    
     
+    private void saveTextFileFromView()
+    {
+        String csvString = "";
+        for (Customer customer : tableCustomers.getItems())
+        {
+            csvString += customer.getName() 
+                      +  ","
+                      +  customer.getEmail()
+                      +  String.format("%n");
+        }
+        
+        try(BufferedWriter bw =
+                new BufferedWriter(
+                        new FileWriter("myCustomers.txt")
+                )
+            )
+        {
+            bw.write(csvString);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void loadTextFileIntoView() 
     {
         ObservableList<Customer> custList =
@@ -79,8 +108,6 @@ public class MainViewController implements Initializable
         {
             System.out.println(ioe);
         }
-        
-        
         tableCustomers.setItems(custList);
     }
 
@@ -107,6 +134,7 @@ public class MainViewController implements Initializable
     @FXML
     private void clickWriteText(ActionEvent event)
     {
+        saveTextFileFromView();
     }
     
 }
