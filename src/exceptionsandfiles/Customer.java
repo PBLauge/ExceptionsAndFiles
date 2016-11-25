@@ -5,13 +5,14 @@
  */
 package exceptionsandfiles;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jeppjleemoritzled
  */
-public class Customer
+public class Customer implements Serializable
 {
-    
     private final String name;
     private final String email;
 
