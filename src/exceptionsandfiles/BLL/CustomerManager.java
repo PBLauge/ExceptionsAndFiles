@@ -6,7 +6,10 @@
 package exceptionsandfiles.BLL;
 
 import exceptionsandfiles.BE.Customer;
+import exceptionsandfiles.BE.FileType;
 import exceptionsandfiles.DAL.FileManager;
+import exceptionsandfiles.DAL.SerialFileHandler;
+import exceptionsandfiles.DAL.TextFileHandler;
 import java.util.List;
 
 /**
@@ -16,7 +19,7 @@ import java.util.List;
 public class CustomerManager
 {
     private FileManager fileManager = 
-            new FileManager();
+            new TextFileHandler();
     
     public void saveAll(List<Customer> custList)
     {
@@ -26,5 +29,18 @@ public class CustomerManager
     public List<Customer> getAll()
     {
         return fileManager.getAll();
+    }
+    
+    public void setFileType(FileType type)
+    {
+        switch(type)
+        {
+            case TEXTFILE:
+                fileManager = new TextFileHandler();
+                break;
+            case SERIALFILE:
+                fileManager = new SerialFileHandler();
+                break;
+        }
     }
 }

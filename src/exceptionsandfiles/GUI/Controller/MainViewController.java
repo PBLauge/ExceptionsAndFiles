@@ -6,23 +6,12 @@
 package exceptionsandfiles.GUI.Controller;
 
 import exceptionsandfiles.BE.Customer;
+import exceptionsandfiles.BE.FileType;
 import exceptionsandfiles.BLL.CustomerManager;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -67,11 +56,14 @@ public class MainViewController implements Initializable
         List<Customer> custList =
                 new ArrayList(tableCustomers.getItems());
         
+        manager.setFileType(FileType.TEXTFILE);
         manager.saveAll(custList);
     }
     
     private void loadTextFileIntoView() 
     {
+        manager.setFileType(FileType.TEXTFILE);
+        
         ObservableList<Customer> custList =
                 FXCollections.observableArrayList(
                     manager.getAll());
@@ -108,40 +100,20 @@ public class MainViewController implements Initializable
     @FXML
     private void clickReadSerial(ActionEvent event)
     {
-        try(ObjectInputStream ois =
-                new ObjectInputStream(
-                    new FileInputStream("myCustomers.ser")))
-        {
-            tableCustomers.setItems(
-                FXCollections.observableArrayList(
-                    (List<Customer>)ois.readObject()));
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (ClassNotFoundException ex)
-        {
-            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        manager.setFileType(FileType.SERIALFILE);
+        ObservableList<Customer> custList =
+            FXCollections.observableArrayList(
+                    manager.getAll());
+        tableCustomers.setItems(custList);
     }
 
     @FXML
     private void clickSaveSerial(ActionEvent event)
     {
-        List<Customer> customerList =
+        List<Customer> custList = 
                 new ArrayList(tableCustomers.getItems());
-        
-        try(ObjectOutputStream oos =
-                new ObjectOutputStream(
-                        new FileOutputStream("myCustomers.ser")))
-        {
-            oos.writeObject(customerList);
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        manager.setFileType(FileType.SERIALFILE);
+        manager.saveAll(custList);
     }
     
 }

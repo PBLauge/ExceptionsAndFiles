@@ -22,67 +22,14 @@ import java.util.logging.Logger;
  *
  * @author jeppjleemoritzled
  */
-public class FileManager
+public abstract class FileManager
 {
-    private final String fileName = "myCustomers.txt";
-    
-    public void saveAll(List<Customer> custList)
+    protected String fileName = "myCustomers";
+
+    public FileManager()
     {
-        String csvString = "";
-        for (Customer customer : custList)
-        {
-            csvString += customer.getName() 
-                      +  ","
-                      +  customer.getEmail()
-                      +  String.format("%n");
-        }
-        
-        try(BufferedWriter bw =
-                new BufferedWriter(
-                        new FileWriter(fileName)
-                )
-            )
-        {
-            bw.write(csvString);
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
-    public List<Customer> getAll()
-    {
-        List<Customer> custList =
-                new ArrayList();
-        
-        try(BufferedReader br = 
-                new BufferedReader(
-                        new FileReader(fileName)
-                )
-            )
-        {
-            Scanner scanner = new Scanner(br);
-            while(scanner.hasNext())
-            {
-                // Gets next line in file
-                String line = scanner.nextLine();
-                // Splits line into array by comma
-                // fields[0] is name
-                // fields[1] is email
-                String[] fields = line.split(",");
-                custList.add(
-                    new Customer(
-                            fields[0].trim(), 
-                            fields[1].trim()
-                    ));
-            }
-        }
-        catch (IOException ioe)
-        {
-            System.out.println(ioe);
-        }
-        
-        return custList;
-    }
+    public abstract void saveAll(List<Customer> custList);
+    public abstract List<Customer> getAll();
 }
