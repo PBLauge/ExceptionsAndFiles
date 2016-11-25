@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package exceptionsandfiles;
+package exceptionsandfiles.GUI.Controller;
 
+import exceptionsandfiles.BE.Customer;
+import exceptionsandfiles.BLL.CustomerManager;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -48,6 +50,9 @@ public class MainViewController implements Initializable
     @FXML
     private TableColumn<Customer, String> columnEmail;
     
+    private CustomerManager manager =
+            new CustomerManager();
+    
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -59,60 +64,18 @@ public class MainViewController implements Initializable
     
     private void saveTextFileFromView()
     {
-        String csvString = "";
-        for (Customer customer : tableCustomers.getItems())
-        {
-            csvString += customer.getName() 
-                      +  ","
-                      +  customer.getEmail()
-                      +  String.format("%n");
-        }
+        List<Customer> custList =
+                new ArrayList(tableCustomers.getItems());
         
-        try(BufferedWriter bw =
-                new BufferedWriter(
-                        new FileWriter("myCustomers.txt")
-                )
-            )
-        {
-            bw.write(csvString);
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        manager.saveAll(custList);
     }
     
     private void loadTextFileIntoView() 
     {
         ObservableList<Customer> custList =
-                FXCollections.observableArrayList();
+                FXCollections.observableArrayList(
+                    manager.getAll());
         
-        try(BufferedReader br = 
-                new BufferedReader(
-                        new FileReader("myCustomers.txt")
-                )
-            )
-        {
-            Scanner scanner = new Scanner(br);
-            while(scanner.hasNext())
-            {
-                // Gets next line in file
-                String line = scanner.nextLine();
-                // Splits line into array by comma
-                // fields[0] is name
-                // fields[1] is email
-                String[] fields = line.split(",");
-                custList.add(
-                    new Customer(
-                            fields[0].trim(), 
-                            fields[1].trim()
-                    ));
-            }
-        }
-        catch (IOException ioe)
-        {
-            System.out.println(ioe);
-        }
         tableCustomers.setItems(custList);
     }
 
